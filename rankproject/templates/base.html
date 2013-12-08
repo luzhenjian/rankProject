@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://dl.dropboxusercontent.com/u/48146041/rank.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>
+            $(document).ready(function()
+            {
+            	$(".team").click(function()
+            	{
+            		$.get("/games/", 
+            		{
+            			q: "{{ game_num }}",
+            			t:  $(this).attr("id")
+            		},
+                   
+            		function(data, status)
+            		{
+            			$("#recentGames").html(data);
+            		});
+            	});
+            });
+        </script>
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body>
+        <div id="account">
+            <p>
+                {% if user.is_authenticated %}
+                {{ user.username }} |
+                <a href="{% url 'submit' %}">submit news</a> | 
+                <a href="{% url 'logout' %}">logout</a>
+                {% else %}
+                <a href="{% url 'login' %}?next={{ request.get_full_path }}">login</a>  |
+                <a href="{% url 'register' %}?next={{ request.get_full_path }}">register</a>
+                {% endif %}
+            </p>
+        </div>
+        <center>
+            <table id="header">
+                <tr >
+                    <td> <a href="{% url 'rank' %}" class="blockLink">Rank</a></td>
+                    <td> <a href="{% url 'news' %}" class="blockLink">News</a></td>
+                    <td> <a href="{% url 'twitter' %}" class="blockLink">Twitter</a></td>
+                    <td> <a href="{% url 'forum' %}" class="blockLink">Forum</a></td>
+                    <td> <a href="{% url 'about' %}" class="blockLink">About</a></td>
+                </tr>
+            </table>
+            <div class="wrapper">
+                {% block content %}{% endblock %}
+            </div>
+            <div class="links">
+                <a href="http://www.nba.com/"  target="_blank">NBA</a> |
+                <a href="http://espn.go.com/nba/"  target="_blank">ESPN</a> |
+                <a href="http://sports.yahoo.com/nba/"  target="_blank">YAHOO!</a> |
+                <a href="http://hoopshype.com/"  target="_blank">HOOPSHYPE</a>
+            </div>
+        </center>
+    </body>
+</html>

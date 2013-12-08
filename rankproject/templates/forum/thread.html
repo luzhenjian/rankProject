@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Posts  -->
+<div class="ttitle">{{ title }}</div>
+<div id="list">
+	<br /><br />
+    {% for post in posts %}
+        <div class="post">
+            <span class="title">{{ post.title }}</span><br />
+            by {{ post.author }} | <span class="date">{{ post.time }}</span> <br /><br />
+            {{ post.message }} <br /><br /><br />
+        </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

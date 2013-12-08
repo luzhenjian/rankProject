@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<!-- Forums  -->
+<div class="main">
+
+    <div id="list">
+    <table border="0" cellpadding="4" width="90%">
+        <tr>
+            <td></td>
+            <td>Posts</td>
+            <td>Last post</td>
+            <td></td>
+        </tr>
+
+        {% for topic in topics %}
+        <tr {% if forloop.last %}class="last"{% endif %}>
+            <td>
+                <div class="title"><a href="{% url 'forum.views.topic' topic.id %}">{{ topic.title }}</a></div>
+            </td>
+            <td>{{ topic.num_threads }}</td>
+            <td>{{ topic.last_thread }}</td>
+        </tr>
+
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

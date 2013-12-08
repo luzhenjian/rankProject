@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load comments %}
+{% block title %}News Comments{% endblock %}
+{% block content %}
+<style>
+    #id_honeypot {display: none;}
+</style>
+<div id="commentNews">
+    <form method="post" action="{% url 'vote' %}">
+        {% csrf_token %}
+        <input type="hidden" name="voter" value="{{ user.id}}" />
+        <input type="hidden" name="news" value="{{ news.id }}" />
+        {% if not user.is_authenticated %}
+        <button class="vote">&uarr;</button>
+        {% elif news.id not in voted %}
+        <button class="vote">&uarr;</button>
+        {% else %}
+        <button class="vote">x</button>
+        {% endif %}
+        <a href="{{ news.url }}"  target="_blank">
+        <b>{{ news.title }}</b>
+        </a>
+        <span class="comhead"> ({{ news.comhead }}) </span>
+        <br>
+        {% get_comment_count for news as comment_count %}
+        <span class="subtext"> {{ news.vote_count }} point{{ news.vote_count|pluralize }} by {{ news.submitter }} {{news.time|timesince}} ago | 
+        <a href="{% url 'comment'  news.id %}">{{comment_count }} comments</a></span>
+    </form>
+</div>
+<div id="comments">
+    <div id="comment_form">
+        {% if user.is_authenticated %}
+        {% get_comment_form for news as form %}
+        <form action="{% comment_form_target %}" method="POST">
+            {% csrf_token %}
+            {{ form.comment }}
+            {{ form.honeypot }}
+            {{ form.content_type }}
+            {{ form.object_pk }}
+            {{ form.timestamp }}
+            {{ form.security_hash }}
+            <input type="hidden" name="next" value="{% url 'comment' news.id %}" />
+            <br>
+            <input type="submit" value="Add comment" id="id_submit" />
+        </form>
+        {% else %}
+        <p>Please <a href="{% url 'login' %}?next={{ request.get_full_path }}">log in</a> to leave a comment.</p>
+        {% endif %}
+    </div>
+    <br>
+    <h3>Comments</h3>
+    {% render_comment_list for news %}
+</div>
+{% endblock %}

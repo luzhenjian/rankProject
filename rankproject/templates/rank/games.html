@@ -1,0 +1,20 @@
+{% if not games %}
+<div id="gameTitle" class="titleAttr">No Game</a></div>
+{% else %}
+<div id="gameTitle" class="titleAttr"><a href="{{ team.website }}"  target="_blank">{{ team }}</a></div>
+<div id="gameList">
+{% for game in games %}
+<table class="gameInfo">
+    <tr>
+        <td><a href="{{ game.guest.website }}"  target="_blank">{{ game.guest }}</a></td>
+        <td>{{ game.guest_score }} - {{ game.home_score }}</td>
+        <td><a href="{{ game.home.website }}"  target="_blank">{{ game.home }}</a></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>{{ game.date | date:"M d"}}</td>
+        <td></td>
+</table>
+{% endfor %}
+</div>
+{% endif %}

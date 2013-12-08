@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}NBA Rank{% endblock %}
+{% block content %}
+<form action="" method="get">
+    <p>Rank based on last <input type='number' size='1' name='q' value='{{ game_num }}'> games <input type="submit" value="submit"></p>
+    <p>(2013 - 2014 Regular Season)</P>
+</form>
+{% if errors %}
+<ul>
+    {% for error in errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<div id="rankTeams">
+    <table id="rankTable">
+        <tr>
+            <td class="attrRank titleAttr">Rank</td>
+            <td class="attrTeam titleAttr">Team</td>
+            <td class="attrTotalWL titleAttr">Total W-L</td>
+            <td class="attrLWL titleAttr">L {{ game_num }} W-L</td>
+            <td class="attrHR titleAttr">Home-Road</td>
+            <td class="attrScore titleAttr">Score</td>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td class="attrRank">{{ item.0 }}.</td>
+            <td id="{{ item.1.id }}" class ="team attrTeam">{{ item.1}}</td>
+            <td class="attrTotalWL">{{ item.1.win_lost.0 }} - {{  item.1.win_lost.1 }}</td>
+            <td class="attrLWL">{{ item.2 }} - {{ item.3 }}</td>
+            <td class="attrHR">{{ item.4 }} - {{ item.5 }}</td>
+            <td class="attrScore">{{ item.6 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<div id="recentGames">
+    {% if not games %}
+    <div id="gameTitle" class="titleAttr">No Game</a></div>
+    {% else %}
+    <div id="gameTitle" class="titleAttr"><a href="{{ team.website }}"  target="_blank">{{ team }}</a></div>
+    <div id="gameList">
+        {% for game in games %}
+        <table class="gameInfo">
+            <tr>
+                <td><a href="{{ game.guest.website }}"  target="_blank">{{ game.guest }}</a></td>
+                <td>{{ game.guest_score }} - {{ game.home_score }}</td>
+                <td><a href="{{ game.home.website }}"  target="_blank">{{ game.home }}</a></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ game.date | date:"M d" }}</td>
+                <td></td>
+        </table>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

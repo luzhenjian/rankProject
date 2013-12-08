@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load comments %}
+{% block title %}NBA Rank News{% endblock %}
+{% block content %}
+<div id="newsList">
+    {% if is_paginated %}
+    <ol start="{{ page_obj.start_index }}">
+    {% else %}
+    <ol>
+        {% endif %}
+        {% for news in object_list %}
+        <form method="post" action="{% url 'vote' %}">
+            <li class="newsItem">
+                {% csrf_token %}
+                <input type="hidden" name="voter" value="{{ user.id }}" />
+                <input type="hidden" name="news" value="{{ news.id }}" />
+		<input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                {% if not user.is_authenticated %}
+                <button class="vote">&uarr;</button>
+                {% elif news.id not in voted %}
+                <button class="vote">&uarr;</button>
+                {% else %}
+                <button class="vote">x</button>
+                {% endif %}
+                <a href="{{ news.url }}"  target="_blank">
+                <b>{{ news.title }}</b>
+                </a>
+                <span class="comhead"> ({{ news.comhead }}) </span>
+                <br>
+                {% get_comment_count for news as comment_count %}
+                <span class="subtext"> {{ news.vote_count }} point{{ news.vote_count|pluralize }} by {{ news.submitter }} {{news.time|timesince}} ago | 
+                <a href="{% url 'comment'  news.id %}">{{comment_count }} comments</a></span>
+            </li>
+        </form>
+        {% endfor %}
+    </ol>
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">&laquo; previous </a>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"> next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
